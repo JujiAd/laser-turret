@@ -31,8 +31,8 @@ class Servo:
             value = value*-1
             # Force the value to be 0 and 1
             OldValue = ((value + 1)/2)  # now 0-1
-            NewMin = 40
-            NewMax = 180
+            NewMin = 0
+            NewMax = 170
         # X Axis
         else:
             # Swap the direction

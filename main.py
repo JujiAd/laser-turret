@@ -11,7 +11,7 @@ from adafruit_servokit import ServoKit
 from engineio.payload import Payload
 
 #Payload.max_decode_packets = 500
-_debug = False
+_debug = True
 
 try:
     # Set up Adafruit servo controller object
@@ -28,9 +28,14 @@ try:
     servo2.start()
 
     # Trigger Servo, Plugged in to Pin 13 in Servo HAT
-    from turret.Binary import *
-    binary = Binary(Queue(), 13, kit, axis="A", verbose=True)
-    binary.start()
+    # from turret.Binary import *
+    # binary = Binary(Queue(), 13, kit, axis="A", verbose=True)
+    # binary.start()
+    # Laser plugged into GPIO pin 21
+    from turret.Laser import *
+    laser = Laser(Queue(), 21, state=False, verbose=True)
+    laser.start()
+    
 
 except Exception as e:
     print("Could not import robot")
@@ -59,12 +64,12 @@ def control(message):
     if "position" in data:
         x = data["position"][0]
         y = data["position"][1]
-        if _debug: print("[Server] position: ", x, ",", y)
+        # if _debug: print("[Server] position: ", x, ",", y)
         servo.q.put(("position", x, y))
         servo2.q.put(("position", y, x))
     elif "A" in data:
         if _debug: print("[Server] A")
-        binary.q.put(("A", 1, 0))
+        laser.q.put("toggle")
 
 
 # Only used when running directly for development.
